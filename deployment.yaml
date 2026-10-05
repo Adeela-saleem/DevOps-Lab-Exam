@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-a-bscs001
+  labels:
+    app: devops-a-bscs001
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-a-bscs001
+  template:
+    metadata:
+      labels:
+        app: devops-a-bscs001
+    spec:
+      containers:
+        - name: devops-a-bscs001
+          image: devops-a-bscs001:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
