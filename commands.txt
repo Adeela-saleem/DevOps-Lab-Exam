@@ -30,6 +30,10 @@ git push origin main
 git commit -am "Update heading"
 git push origin main
 
+# Dockerfile tightened so the image serves only site/
+git commit -am "Serve only site/ contents from the nginx image"
+git push origin main
+
 # ---------- Question 2: Docker and Kubernetes ----------
 
 # a) Docker
@@ -56,3 +60,12 @@ kubectl scale deployment devops-a-bscs001 --replicas=2
 kubectl get pods -l app=devops-a-bscs001
 kubectl get deployment devops-a-bscs001
 minikube service devops-a-bscs001 --url
+
+# Refresh Docker and Kubernetes after the heading change (same final page as GitHub Pages)
+docker build -t devops-a-bscs001:v1 .
+docker rm -f devops-a-bscs001
+docker run -d --name devops-a-bscs001 -p 8080:80 devops-a-bscs001:v1
+minikube image load devops-a-bscs001:v1 --overwrite=true
+kubectl rollout restart deployment/devops-a-bscs001
+kubectl rollout status deployment/devops-a-bscs001
+kubectl get deployment,service,pods -l app=devops-a-bscs001
