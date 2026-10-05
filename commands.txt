@@ -1,0 +1,58 @@
+# ---------- Question 1: Git and GitHub ----------
+
+# a) Repository and initial push
+git init -b main
+git add site .gitignore
+git commit -m "Initial commit: portfolio website"
+git remote add origin https://github.com/Adeela-saleem/DevOps-Lab-Exam.git
+git push -u origin main
+
+# b) Branching and merging
+git checkout -b update-content
+# (added a fourth skill to site/index.html)
+git commit -am "Add fourth technical skill"
+git checkout main
+git merge --no-ff update-content -m "Merge branch 'update-content'"
+git push origin main update-content
+git log --oneline --graph --all
+git branch -a
+
+# c) GitHub Actions and GitHub Pages
+# (GitHub: Settings > Pages > Source = GitHub Actions)
+git add .github
+git commit -m "Add GitHub Pages deployment workflow"
+git add Dockerfile .dockerignore deployment.yaml service.yaml
+git commit -m "Add Dockerfile and Kubernetes manifests"
+git push origin main
+
+# d) Update the live website
+# (changed the <h1> heading in site/index.html)
+git commit -am "Update heading"
+git push origin main
+
+# ---------- Question 2: Docker and Kubernetes ----------
+
+# a) Docker
+docker build -t devops-a-bscs001:v1 .
+docker run -d --name devops-a-bscs001 -p 8080:80 devops-a-bscs001:v1
+docker images devops-a-bscs001
+docker ps --filter name=devops-a-bscs001
+curl localhost:8080
+
+# b) Kubernetes Deployment
+minikube start --driver=docker
+minikube image load devops-a-bscs001:v1
+kubectl apply -f deployment.yaml
+kubectl rollout status deployment/devops-a-bscs001
+kubectl get pods -l app=devops-a-bscs001
+
+# c) Kubernetes Service
+kubectl apply -f service.yaml
+kubectl get service devops-a-bscs001
+minikube service devops-a-bscs001
+
+# d) Scaling
+kubectl scale deployment devops-a-bscs001 --replicas=2
+kubectl get pods -l app=devops-a-bscs001
+kubectl get deployment devops-a-bscs001
+minikube service devops-a-bscs001 --url
